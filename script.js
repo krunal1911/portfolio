@@ -60,11 +60,22 @@ const heroStats = document.querySelector('.hero-stats');
 if (heroStats) heroObserver.observe(heroStats);
 
 // Reveal-on-scroll for section content
-const revealTargets = document.querySelectorAll('.module-card, .log-item, .timeline-item, .skill-block, .contact-link');
+const revealGroups = ['.module-card', '.log-item', '.timeline-item', '.skill-block', '.contact-link', '.eyebrow', '.section-title', '.about-text', '.education-card'];
+const revealTargets = document.querySelectorAll(revealGroups.join(', '));
+
 revealTargets.forEach(el => {
   el.style.opacity = '0';
   el.style.transform = 'translateY(14px)';
   el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+});
+
+// stagger siblings within the same group so lists cascade in rather than popping at once
+revealGroups.forEach(selector => {
+  const items = document.querySelectorAll(selector);
+  items.forEach((el, i) => {
+    const delay = Math.min(i, 5) * 0.08; // cap so long lists don't feel sluggish
+    el.style.transitionDelay = `${delay}s`;
+  });
 });
 
 const revealObserver = new IntersectionObserver((entries) => {
